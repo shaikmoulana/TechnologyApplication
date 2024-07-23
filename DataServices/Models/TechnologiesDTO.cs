@@ -2,6 +2,8 @@
 
 public class TechnologiesDTO
 {
+    public string Id { get; set; }
+
     [Required(ErrorMessage = "The Name field is required.")]
     public string Name { get; set; }
 

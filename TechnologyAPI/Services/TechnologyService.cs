@@ -45,12 +45,14 @@ namespace TechnologyAPI.Services
             // Update properties with the new values
             existingTechnology.Name = technology.Name;
             existingTechnology.DepartmentId = technology.DepartmentId;
-            existingTechnology.UpdatedDate = DateTime.Now;
+            existingTechnology.IsActive = technology.IsActive;
             existingTechnology.UpdatedBy = technology.UpdatedBy;
             existingTechnology.UpdatedDate = technology.UpdatedDate;
+
             // Call repository to update the technology
             return await _repository.UpdateTechnology(existingTechnology);
         }
+
 
         public async Task<bool> DeleteTechnology(string id)
         {

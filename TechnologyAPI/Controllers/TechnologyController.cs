@@ -100,9 +100,15 @@ namespace TechnologyAPI.Controllers
                 }*/
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTechnology(string id, [FromBody] Technologies technology)
+        public async Task<IActionResult> UpdateTechnology(string id, [FromBody] TechnologiesDTO techDto)
         {
-            if (id != technology.Id)
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Invalid model state for updating technology");
+                return BadRequest(ModelState);
+            }
+
+            if (id != techDto.Id)
             {
                 _logger.LogWarning("Technology id: {Id} does not match with the id in the request body", id);
                 return BadRequest("Technology ID mismatch.");
@@ -117,17 +123,18 @@ namespace TechnologyAPI.Controllers
 
             _logger.LogInformation("Updating technology with id: {Id}", id);
 
-            // Optionally update fields from the existingTechnology if needed
-            existingTechnology.Name = technology.Name;
-            existingTechnology.DepartmentId = technology.DepartmentId;
-            existingTechnology.IsActive = technology.IsActive;
-            existingTechnology.UpdatedBy = technology.UpdatedBy;
-            existingTechnology.UpdatedDate = technology.UpdatedDate;
+            // Update properties from DTO
+            existingTechnology.Name = techDto.Name;
+            existingTechnology.DepartmentId = techDto.DepartmentId;
+            existingTechnology.IsActive = techDto.IsActive;
+            existingTechnology.UpdatedBy = techDto.UpdatedBy;
+            existingTechnology.UpdatedDate = techDto.UpdatedDate;
 
             await _technologyService.UpdateTechnology(existingTechnology);
 
             return NoContent();
         }
+    
 
 
         [HttpDelete("{id}")]
